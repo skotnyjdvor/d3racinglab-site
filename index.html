@@ -123,7 +123,7 @@ h2, h3 { text-wrap: balance; }
   padding-left: var(--gutter); padding-right: var(--gutter-r);
 }
 .under-inner {
-  position: relative; z-index: 1;
+  position: relative; z-index: 1; will-change: transform, opacity;
   display: grid; gap: 28px; justify-items: center; text-align: center;
   transform: scale(calc(.9 + var(--b, 0) * .1));
   opacity: calc(.2 + var(--b, 0) * .8);
@@ -139,7 +139,7 @@ h2, h3 { text-wrap: balance; }
 .half.l { left: 0; width: var(--split, 50vw); background: var(--paper); color: var(--ink); transform: translateY(calc(var(--b, 0) * -101%)); }
 .half.r { left: var(--split, 50vw); right: 0; background: var(--ink); color: #fff; transform: translateY(calc(var(--b, 0) * 101%)); }
 /* burgundy wash fades in on its own layer: an opacity change is cheap, a background repaint per frame is not */
-.half.r::before { content: ""; position: absolute; inset: 0; background: var(--burgundy); opacity: var(--a, 0); }
+.half.r::before { content: ""; position: absolute; inset: 0; background: var(--burgundy); opacity: var(--a, 0); will-change: opacity; }
 
 /* the type layer is the full viewport in both halves; each half only shows its slice, so the name reads as one word with the colors swapped at the seam */
 .type { position: absolute; top: 0; width: 100vw; height: 100%; }
@@ -172,12 +172,12 @@ h2, h3 { text-wrap: balance; }
 .kart {
   position: absolute; left: 0; top: 50%; pointer-events: none;
   width: min(64vw, 100vh);
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) translateZ(0);
 }
 .kart img { width: 100%; height: auto; }
 /* color comes from cross-fading a pre-made grey copy, not from a CSS filter recomputed every frame */
 .kart .gray { position: absolute; inset: 0; }
-.kart .color { position: relative; opacity: var(--a, 0); }
+.kart .color { position: relative; opacity: var(--a, 0); will-change: opacity; }
 .scroll-cue {
   position: absolute; left: 50%; translate: -50% 0; bottom: calc(4.5vh + clamp(40px, 7vh, 80px) + 18px);
   font: 400 10px/1 var(--tech); letter-spacing: .2em; text-transform: uppercase;
@@ -702,12 +702,13 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
   function ease(t){ return t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2; }
-  var ticking = false, lastSplit = null;
-  function update() {
-    ticking = false;
-    if (reduce.matches) return;
+  /* the intro follows the scroll position through a short easing glide, so coarse wheel steps and touch jitter read as one smooth motion */
+  var raf = 0, lastSplit = null, cur = null, target = 0, lastT = 0;
+  function progress() {
     var total = intro.offsetHeight - window.innerHeight;
-    var p = clamp(-intro.getBoundingClientRect().top / (total || 1));
+    return clamp(-intro.getBoundingClientRect().top / (total || 1));
+  }
+  function apply(p) {
     var a = ease(clamp(p / .62));
     var b = ease(clamp((p - .62) / .3));
     var split = narrow.matches ? 50 : 50 - a * 12;  /* seam drifts from 50vw to 38vw; fixed on phones to avoid relayout */
@@ -716,10 +717,23 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
     s.setProperty("--b", b.toFixed(4));
     if (split !== lastSplit) { s.setProperty("--split", split.toFixed(3) + "vw"); lastSplit = split; }
   }
+  function frame(t) {
+    raf = 0;
+    if (reduce.matches) return;
+    var dt = lastT ? Math.min(t - lastT, 64) : 16;
+    lastT = t;
+    if (cur === null) cur = target;
+    cur += (target - cur) * (1 - Math.exp(-dt / 110));
+    if (Math.abs(target - cur) < .0004) cur = target;
+    apply(cur);
+    if (cur !== target) raf = requestAnimationFrame(frame); else lastT = 0;
+  }
   var nav = document.querySelector(".nav");
   function onScroll(){
-    nav.classList.toggle("solid", intro.getBoundingClientRect().bottom <= nav.offsetHeight);
-    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    var r = intro.getBoundingClientRect();
+    nav.classList.toggle("solid", r.bottom <= nav.offsetHeight);
+    target = progress();
+    if (!raf) raf = requestAnimationFrame(frame);
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
