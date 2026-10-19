@@ -40,6 +40,7 @@ body {
   overflow-x: hidden;
 }
 img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--ink); }
@@ -87,7 +88,25 @@ h2, h3 { text-wrap: balance; }
 .nav ul a:hover { text-decoration: underline; text-underline-offset: 6px; }
 .nav .store { font: 400 11px/1 var(--tech); letter-spacing: .14em; text-transform: uppercase; border: 1px solid currentColor; padding: 11px 16px; }
 .nav .store:hover { background: #fff; color: #000; }
-@media (max-width: 860px) { .nav ul { display: none; } }
+.burger { display: none; width: 44px; height: 44px; margin-right: -10px; background: none; border: 0; color: inherit; cursor: pointer; padding: 10px; }
+.burger span { display: block; height: 2px; background: currentColor; margin: 6px 0; }
+.mmenu {
+  position: fixed; inset: 0; z-index: 70; background: var(--ink); color: #fff;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 18px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+  padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-rows: auto 1fr auto; gap: 24px;
+}
+.mmenu .top { display: flex; justify-content: space-between; align-items: center; }
+.mmenu .top img { width: 40px; }
+.mmenu .close { width: 44px; height: 44px; margin-right: -10px; background: none; border: 0; color: #fff; font: 300 34px/1 var(--body); cursor: pointer; }
+.mmenu ul { list-style: none; margin: 0; padding: 0; align-self: center; display: grid; gap: 4px; }
+.mmenu ul a { font: 900 clamp(44px, 13vw, 72px)/1 var(--display); text-transform: uppercase; text-decoration: none; }
+.mmenu ul li:nth-child(1) a:active, .mmenu ul a:hover { color: var(--orange); }
+.mmenu .stripes { height: 40px; }
+@media (max-width: 860px) {
+  .nav ul, .nav .store { display: none; }
+  .burger { display: block; }
+}
 
 /* ---------- INTRO: split-screen scroll ---------- */
 .intro { position: relative; height: 420vh; background: var(--paper); }
@@ -159,6 +178,7 @@ h2, h3 { text-wrap: balance; }
 
 /* ---------- SECTIONS ---------- */
 section { position: relative; }
+section[id] { scroll-margin-top: 64px; }
 .sec { padding-block: clamp(80px, 12vw, 160px); }
 .sec-head { display: grid; gap: 22px; margin-bottom: clamp(40px, 6vw, 72px); }
 .sec-head .label { color: var(--burgundy); }
@@ -252,6 +272,7 @@ section { position: relative; }
 .dlist .nm { font-weight: 600; font-size: 16px; line-height: 1.3; }
 .dlist .ct { font: 400 10px/1.4 var(--tech); letter-spacing: .1em; text-transform: uppercase; color: var(--blue); text-align: right; }
 .dlist .cy { grid-column: 1 / -1; color: var(--ink-2); font-size: 14px; }
+.more { margin-top: 24px; }
 
 /* Contacts */
 .contact .split { min-height: auto; }
@@ -288,6 +309,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   .prod { min-height: 380px; }
 }
 @media (max-width: 560px) {
+  .intro { height: 320vh; }
   body { font-size: 16px; }
   .type .l1 { top: 24vh; }
   .type .l2 { bottom: 26vh; }
@@ -323,7 +345,28 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
     <li><a href="#contacts">Contacts</a></li>
   </ul>
   <a class="store" href="https://store.kartrepublic.com" target="_blank" rel="noopener">Store</a>
+  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mmenu"><span></span><span></span><span></span></button>
 </nav>
+
+<div class="mmenu" id="mmenu" hidden>
+  <div class="top">
+    <img src="assets/kr-mark-white.svg" alt="Kart Republic">
+    <button class="close" id="mclose" type="button" aria-label="Close menu">&times;</button>
+  </div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#racing">Racing Team</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#dealers">Dealers</a></li>
+    <li><a href="#contacts">Contacts</a></li>
+    <li><a href="https://store.kartrepublic.com" target="_blank" rel="noopener" style="color:var(--orange)">Store</a></li>
+  </ul>
+  <svg class="stripes" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
+    <path class="s-b" d="M0 10 H760 L790 4 H1000"/>
+    <path class="s-o" d="M0 32 H420 L450 54 H620 L650 32 H1000"/>
+    <path class="s-u" d="M0 54 H420 L450 32 H620 L650 54 H1000"/>
+  </svg>
+</div>
 
 <!-- INTRO -->
 <section class="intro" id="top" aria-label="Kart Republic">
@@ -481,6 +524,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
     </div>
     <div class="filters" role="group" aria-label="Filter dealers by region" id="filters"></div>
     <ul class="dlist" id="dlist"></ul>
+    <button class="btn ghost more" id="more" type="button" hidden>Show all dealers</button>
   </div>
 </section>
 
@@ -575,8 +619,16 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   var regions = ["All","Europe","Americas","Asia & Middle East","Africa & Oceania"];
   var fEl = document.getElementById("filters"), lEl = document.getElementById("dlist");
   function esc(s){ return s.replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  var mEl = document.getElementById("more"), cur = "All", expanded = false;
+  var narrow = window.matchMedia("(max-width: 860px)");
   function render(r) {
-    lEl.innerHTML = D.filter(function(d){ return r === "All" || d[0] === r; }).map(function(d){
+    if (r !== cur) expanded = false;
+    cur = r;
+    var list = D.filter(function(d){ return r === "All" || d[0] === r; });
+    var limit = narrow.matches && !expanded ? 8 : list.length;
+    mEl.hidden = list.length <= limit;
+    mEl.textContent = "Show all " + list.length + " dealers";
+    lEl.innerHTML = list.slice(0, limit).map(function(d){
       return '<li><span class="nm">' + esc(d[2]) + '</span><span class="ct">' + esc(d[1]) + '</span><span class="cy">' + esc(d[3]) + '</span></li>';
     }).join("");
     Array.prototype.forEach.call(fEl.children, function(b){ b.setAttribute("aria-pressed", b.dataset.r === r ? "true" : "false"); });
@@ -589,7 +641,21 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
     b.addEventListener("click", function(){ render(r); });
     fEl.appendChild(b);
   });
+  mEl.addEventListener("click", function(){ expanded = true; render(cur); });
+  narrow.addEventListener ? narrow.addEventListener("change", function(){ render(cur); }) : 0;
   render("All");
+
+  /* ---- mobile menu ---- */
+  var mm = document.getElementById("mmenu"), bg = document.getElementById("burger");
+  function menu(open) {
+    mm.hidden = !open; bg.setAttribute("aria-expanded", open ? "true" : "false");
+    document.documentElement.style.overflow = open ? "hidden" : "";
+    (open ? document.getElementById("mclose") : bg).focus();
+  }
+  bg.addEventListener("click", function(){ menu(true); });
+  document.getElementById("mclose").addEventListener("click", function(){ menu(false); });
+  mm.querySelectorAll("a").forEach(function(a){ a.addEventListener("click", function(){ menu(false); }); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !mm.hidden) menu(false); });
 
   /* ---- split-screen intro ---- */
   var intro = document.querySelector(".intro"), stage = document.getElementById("stage");
