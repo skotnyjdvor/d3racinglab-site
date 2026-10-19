@@ -239,18 +239,19 @@ section[id] { scroll-margin-top: 64px; }
 .big-quote b { color: var(--orange); font-weight: inherit; }
 
 /* Products */
-.products .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
+.products .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
 .prod {
   position: relative; background: var(--paper); min-height: 520px; padding: clamp(24px, 3vw, 44px);
   display: grid; grid-template-rows: auto 1fr auto; gap: 24px; text-decoration: none; overflow: hidden;
   transition: background .35s, color .35s;
 }
-.prod .brand { font: 900 clamp(110px, 16vw, 230px)/.8 var(--display); text-transform: uppercase; align-self: end; letter-spacing: -.02em; }
+.prod .brand { font: 900 clamp(100px, 11vw, 190px)/.8 var(--display); text-transform: uppercase; align-self: end; letter-spacing: -.02em; }
 .prod .foot { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
 .prod .foot p { margin: 0; max-width: 34ch; color: var(--ink-2); transition: color .35s; }
 .prod .arrow { font: 400 11px/1 var(--tech); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
 .prod:hover { background: var(--burgundy); color: #fff; }
 .prod.fa:hover { background: var(--blue); }
+.prod.dap:hover { background: var(--orange); }
 .prod:hover .foot p { color: rgba(255,255,255,.8); }
 .prod .chip { position: absolute; top: clamp(24px, 3vw, 44px); right: clamp(24px, 3vw, 44px); width: 14px; height: 14px; transform: rotate(45deg); border: 3px solid currentColor; }
 
@@ -482,7 +483,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   <div class="wrap">
     <div class="sec-head">
       <span class="label">Products</span>
-      <h2 class="h-l">Two chassis lines</h2>
+      <h2 class="h-l">Three chassis lines</h2>
     </div>
     <div class="grid">
       <a class="prod kr" href="https://store.kartrepublic.com/it/kr-kart-republic.html" target="_blank" rel="noopener">
@@ -495,6 +496,12 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
         <span class="label">Fernando Alonso Kart</span>
         <span class="brand">FA</span>
         <span class="foot"><p>The FA Kart line built with Fernando Alonso, available through the same store and dealers.</p><span class="arrow">Store →</span></span>
+        <span class="chip" aria-hidden="true"></span>
+      </a>
+      <a class="prod dap" href="https://store.kartrepublic.com" target="_blank" rel="noopener">
+        <span class="label">DAP</span>
+        <span class="brand">DAP</span>
+        <span class="foot"><p>The DAP chassis line, sold through the Kart Republic store and dealer network.</p><span class="arrow">Store →</span></span>
         <span class="chip" aria-hidden="true"></span>
       </a>
     </div>
