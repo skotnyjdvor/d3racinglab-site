@@ -163,12 +163,12 @@ h2, h3 { text-wrap: balance; }
 }
 .stripes-live path { stroke-dasharray: 1100; stroke-dashoffset: calc(1100 - var(--a, 0) * 1100); }
 
+/* kart sits on the seam, so the right half shows only its right side; it rides down with that half and gains color as the half turns burgundy */
 .kart {
-  position: absolute; z-index: 0; left: 50%; top: 50%; pointer-events: none;
-  width: min(86vw, 108vh);
-  transform: translate(-50%, -50%) scale(calc(.92 + var(--b, 0) * .08));
-  opacity: calc(var(--b, 0) * .22);
-  will-change: transform;
+  position: absolute; left: 0; top: 50%; pointer-events: none;
+  width: min(64vw, 100vh);
+  transform: translate(-50%, -50%);
+  filter: grayscale(calc(1 - var(--a, 0))) drop-shadow(0 24px 40px rgba(0,0,0,.45));
 }
 .kart img { width: 100%; height: auto; }
 .scroll-cue {
@@ -318,7 +318,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   .prod { min-height: 380px; }
 }
 @media (max-width: 560px) {
-  .kart { width: 125vw; }
+  .kart { width: 96vw; }
   .intro { height: 320vh; }
   body { font-size: 16px; }
   .type .l1 { top: 24vh; }
@@ -338,7 +338,6 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   .intro { height: auto; }
   .stage { position: relative; height: auto; }
   .half, .stripes-live, .scroll-cue { display: none; }
-  .kart { transform: translate(-50%, -50%); opacity: .22; }
   .under { position: relative; min-height: 90vh; padding-block: 120px 80px; }
   .under-inner { transform: none; opacity: 1; }
 }
@@ -383,10 +382,6 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
 <section class="intro" id="top" aria-label="Kart Republic">
   <div class="stage" id="stage">
     <div class="under">
-      <picture class="kart">
-        <source srcset="assets/kart.webp" type="image/webp">
-        <img src="assets/kart.png" alt="Kart Republic racing kart, top view" width="1000" height="857">
-      </picture>
       <div class="under-inner">
         <img src="assets/kr-logo.svg" alt="KR Global Motorsport Company">
         <p class="tag">We are republic,<br><em>we are one</em></p>
@@ -401,6 +396,10 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
       </div>
     </div>
     <div class="half r" aria-hidden="true">
+      <picture class="kart">
+        <source srcset="assets/kart.webp" type="image/webp">
+        <img src="assets/kart.png" alt="" width="1000" height="857">
+      </picture>
       <div class="type">
         <div class="line l1">Kart</div>
         <div class="line l2">Re<span class="o">pub</span>lic</div>
