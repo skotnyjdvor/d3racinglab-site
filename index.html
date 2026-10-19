@@ -256,6 +256,18 @@ section[id] { scroll-margin-top: 64px; }
 .prod .chip { position: absolute; top: clamp(24px, 3vw, 44px); right: clamp(24px, 3vw, 44px); width: 14px; height: 14px; transform: rotate(45deg); border: 3px solid currentColor; }
 
 /* Korus group */
+.korus { isolation: isolate; overflow: hidden; }
+.korus .sec-head { position: relative; }
+.korus .sec-head::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  top: clamp(-120px, -8vw, -60px); bottom: -40px; right: calc(50% - 50vw); width: min(78vw, 1200px);
+  background: url("assets/korus.jpg") 30% center / cover no-repeat;
+  background-image: image-set(url("assets/korus.webp") type("image/webp"), url("assets/korus.jpg") type("image/jpeg"));
+  background-position: 30% center; background-size: cover;
+  opacity: .2;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 35%, #000 80%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 35%, #000 80%, transparent);
+}
 .korus .grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .korus .co { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 26px 22px 30px; display: grid; gap: 12px; align-content: start; min-height: 200px; }
 .korus .co h3 { font: 800 30px/.95 var(--display); text-transform: uppercase; margin: 0; }
