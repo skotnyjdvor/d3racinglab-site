@@ -104,12 +104,15 @@ h2, h3 { text-wrap: balance; }
 .mmenu ul li:nth-child(1) a:active, .mmenu ul a:hover { color: var(--orange); }
 .mmenu .stripes { height: 40px; }
 @media (max-width: 860px) {
+  /* blend modes over a scroll-animated area force full recompositing on phones */
+  .nav { mix-blend-mode: normal; background: var(--ink); padding-top: calc(env(safe-area-inset-top, 0px) + 10px); padding-bottom: 10px; }
+  .nav .mark { width: 34px; }
   .nav ul, .nav .store { display: none; }
   .burger { display: block; }
 }
 
 /* ---------- INTRO: split-screen scroll ---------- */
-.intro { position: relative; height: 250vh; background: var(--paper); }
+.intro { position: relative; height: 250vh; height: 250svh; background: var(--paper); }
 .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 
 /* revealed layer, sits under the two halves */
@@ -134,14 +137,16 @@ h2, h3 { text-wrap: balance; }
   will-change: transform;
 }
 .half.l { left: 0; width: var(--split, 50vw); background: var(--paper); color: var(--ink); transform: translateY(calc(var(--b, 0) * -101%)); }
-.half.r { left: var(--split, 50vw); right: 0; background: var(--rbg, var(--ink)); color: #fff; transform: translateY(calc(var(--b, 0) * 101%)); }
+.half.r { left: var(--split, 50vw); right: 0; background: var(--ink); color: #fff; transform: translateY(calc(var(--b, 0) * 101%)); }
+/* burgundy wash fades in on its own layer: an opacity change is cheap, a background repaint per frame is not */
+.half.r::before { content: ""; position: absolute; inset: 0; background: var(--burgundy); opacity: var(--a, 0); }
 
 /* the type layer is the full viewport in both halves; each half only shows its slice, so the name reads as one word with the colors swapped at the seam */
 .type { position: absolute; top: 0; width: 100vw; height: 100%; }
 .half.l .type { left: 0; }
 .half.r .type { left: calc(var(--split, 50vw) * -1); }
 .type .line {
-  position: absolute; left: 0; white-space: nowrap;
+  position: absolute; left: 0; white-space: nowrap; will-change: transform;
   font: 900 clamp(96px, 22vw, 380px)/.8 var(--display);
   text-transform: uppercase; letter-spacing: -.02em;
 }
@@ -168,9 +173,11 @@ h2, h3 { text-wrap: balance; }
   position: absolute; left: 0; top: 50%; pointer-events: none;
   width: min(64vw, 100vh);
   transform: translate(-50%, -50%);
-  filter: grayscale(calc(1 - var(--a, 0))) drop-shadow(0 24px 40px rgba(0,0,0,.45));
 }
 .kart img { width: 100%; height: auto; }
+/* color comes from cross-fading a pre-made grey copy, not from a CSS filter recomputed every frame */
+.kart .gray { position: absolute; inset: 0; }
+.kart .color { position: relative; opacity: var(--a, 0); }
 .scroll-cue {
   position: absolute; left: 50%; translate: -50% 0; bottom: calc(4.5vh + clamp(40px, 7vh, 80px) + 18px);
   font: 400 10px/1 var(--tech); letter-spacing: .2em; text-transform: uppercase;
@@ -332,7 +339,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
 }
 @media (max-width: 560px) {
   .kart { width: 96vw; }
-  .intro { height: 220vh; }
+  .intro { height: 220vh; height: 220svh; }
   body { font-size: 16px; }
   .type .l1 { top: 24vh; }
   .type .l2 { bottom: 26vh; }
@@ -409,10 +416,10 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
       </div>
     </div>
     <div class="half r" aria-hidden="true">
-      <picture class="kart">
-        <source srcset="assets/kart.webp" type="image/webp">
-        <img src="assets/kart.png" alt="" width="1000" height="857">
-      </picture>
+      <div class="kart">
+        <picture class="gray"><source srcset="assets/kart-gray.webp" type="image/webp"><img src="assets/kart-gray.png" alt="" width="1000" height="857"></picture>
+        <picture class="color"><source srcset="assets/kart.webp" type="image/webp"><img src="assets/kart.png" alt="" width="1000" height="857"></picture>
+      </div>
       <div class="type">
         <div class="line l1">Kart</div>
         <div class="line l2">Re<span class="o">pub</span>lic</div>
@@ -693,10 +700,9 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   /* ---- split-screen intro ---- */
   var intro = document.querySelector(".intro"), stage = document.getElementById("stage");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var ink = [28,28,26], bur = [112,35,59];
   function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
   function ease(t){ return t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2; }
-  var ticking = false;
+  var ticking = false, lastSplit = null;
   function update() {
     ticking = false;
     if (reduce.matches) return;
@@ -704,13 +710,11 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
     var p = clamp(-intro.getBoundingClientRect().top / (total || 1));
     var a = ease(clamp(p / .62));
     var b = ease(clamp((p - .62) / .3));
-    var split = 50 - a * 12;                       /* seam drifts from 50vw to 38vw */
-    var c = ink.map(function(v, i){ return Math.round(v + (bur[i] - v) * a); });
+    var split = narrow.matches ? 50 : 50 - a * 12;  /* seam drifts from 50vw to 38vw; fixed on phones to avoid relayout */
     var s = stage.style;
     s.setProperty("--a", a.toFixed(4));
     s.setProperty("--b", b.toFixed(4));
-    s.setProperty("--split", split.toFixed(3) + "vw");
-    s.setProperty("--rbg", "rgb(" + c.join(",") + ")");
+    if (split !== lastSplit) { s.setProperty("--split", split.toFixed(3) + "vw"); lastSplit = split; }
   }
   var nav = document.querySelector(".nav");
   function onScroll(){
