@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kart Republic</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Kart Republic. KR Global Motorsport Company: kart chassis, racing team and a worldwide dealer network. Due Carrare, Padova.">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Barlow:wght@400;500;600&family=Michroma&display=swap">
+<style>
+/* Layout: a sticky split-screen intro (white | ink halves, the name masked across the seam) that tears open onto a white editorial page striped with the logo's three racing lines. Single light look, by choice, to keep the brand colors true. */
+:root {
+  --paper: #ffffff;
+  --paper-2: #f3f3f1;
+  --ink: #1c1c1a;
+  --ink-2: #55554f;
+  --line: #dcdcd7;
+  --burgundy: #70233b;
+  --orange: #ff6801;
+  --blue: #007abb;
+  --display: "Big Shoulders Display", "Oswald", "Arial Narrow", Impact, sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --tech: "Michroma", "Eurostile", "Arial Black", sans-serif;
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --wrap: 1240px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--ink); }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+.label {
+  font: 400 11px/1.4 var(--tech);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+h2, h3 { text-wrap: balance; }
+.h-xl {
+  font: 900 clamp(56px, 10vw, 150px)/.86 var(--display);
+  text-transform: uppercase;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.h-l {
+  font: 800 clamp(40px, 6vw, 84px)/.9 var(--display);
+  text-transform: uppercase;
+  margin: 0;
+}
+.lede { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.55; max-width: 60ch; color: var(--ink-2); margin: 0; }
+
+/* ---------- NAV ---------- */
+.nav {
+  position: fixed; inset: 0 0 auto; z-index: 50;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 18px);
+  padding-bottom: 18px;
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+.nav > * { pointer-events: auto; }
+.nav { transition: background .3s, padding .3s; }
+.nav.solid { mix-blend-mode: normal; background: var(--ink); padding-bottom: 12px; padding-top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.nav.solid .mark { width: 34px; }
+.nav .mark { width: 40px; height: auto; }
+.nav ul { list-style: none; display: flex; gap: clamp(14px, 2.2vw, 34px); margin: 0; padding: 0; }
+.nav a { text-decoration: none; }
+.nav ul a { font: 400 11px/1 var(--tech); letter-spacing: .14em; text-transform: uppercase; }
+.nav ul a:hover { text-decoration: underline; text-underline-offset: 6px; }
+.nav .store { font: 400 11px/1 var(--tech); letter-spacing: .14em; text-transform: uppercase; border: 1px solid currentColor; padding: 11px 16px; }
+.nav .store:hover { background: #fff; color: #000; }
+@media (max-width: 860px) { .nav ul { display: none; } }
+
+/* ---------- INTRO: split-screen scroll ---------- */
+.intro { position: relative; height: 420vh; background: var(--paper); }
+.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+
+/* revealed layer, sits under the two halves */
+.under {
+  position: absolute; inset: 0;
+  background: var(--paper);
+  display: grid; place-items: center;
+  padding-left: var(--gutter); padding-right: var(--gutter-r);
+}
+.under-inner {
+  display: grid; gap: 28px; justify-items: center; text-align: center;
+  transform: scale(calc(.9 + var(--b, 0) * .1));
+  opacity: calc(.2 + var(--b, 0) * .8);
+}
+.under-inner img { width: min(560px, 82vw); }
+.under-inner .tag { font: 800 clamp(28px, 4.4vw, 60px)/.95 var(--display); text-transform: uppercase; margin: 0; }
+.under-inner .tag em { font-style: normal; color: var(--orange); }
+
+.half {
+  position: absolute; top: 0; height: 100%; overflow: hidden;
+  will-change: transform;
+}
+.half.l { left: 0; width: var(--split, 50vw); background: var(--paper); color: var(--ink); transform: translateY(calc(var(--b, 0) * -101%)); }
+.half.r { left: var(--split, 50vw); right: 0; background: var(--rbg, var(--ink)); color: #fff; transform: translateY(calc(var(--b, 0) * 101%)); }
+
+/* the type layer is the full viewport in both halves; each half only shows its slice, so the name reads as one word with the colors swapped at the seam */
+.type { position: absolute; top: 0; width: 100vw; height: 100%; }
+.half.l .type { left: 0; }
+.half.r .type { left: calc(var(--split, 50vw) * -1); }
+.type .line {
+  position: absolute; left: 0; white-space: nowrap;
+  font: 900 clamp(96px, 22vw, 380px)/.8 var(--display);
+  text-transform: uppercase; letter-spacing: -.02em;
+}
+.type .l1 { top: 12vh; transform: translateX(calc(3vw + var(--a, 0) * 30vw)); }
+.type .l2 { bottom: 12vh; transform: translateX(calc(3vw - var(--a, 0) * 24vw)); }
+.type .l2 .o { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.half.r .type .l2 .o { -webkit-text-stroke-color: #fff; }
+.type .meta {
+  position: absolute; top: 50%; translate: 0 -50%; left: 0; width: 100vw;
+  padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px));
+  display: flex; justify-content: space-between; gap: 24px;
+}
+.type .meta span { font: 400 11px/1.6 var(--tech); letter-spacing: .14em; text-transform: uppercase; }
+.type .meta span:last-child { text-align: right; }
+
+.stripes-live {
+  position: absolute; left: 0; right: 0; bottom: 4.5vh; height: clamp(40px, 7vh, 80px);
+  pointer-events: none; opacity: calc(1 - var(--b, 0) * 3);
+}
+.stripes-live path { stroke-dasharray: 1100; stroke-dashoffset: calc(1100 - var(--a, 0) * 1100); }
+
+.scroll-cue {
+  position: absolute; left: 50%; translate: -50% 0; bottom: calc(4.5vh + clamp(40px, 7vh, 80px) + 18px);
+  font: 400 10px/1 var(--tech); letter-spacing: .2em; text-transform: uppercase;
+  color: #fff; mix-blend-mode: difference;
+  opacity: calc(1 - var(--a, 0) * 4);
+}
+
+/* ---------- STRIPES (logo motif) ---------- */
+.stripes { display: block; width: 100%; height: 64px; }
+.stripes path { fill: none; stroke-width: 9; stroke-linejoin: miter; }
+.s-b { stroke: var(--burgundy); }
+.s-o { stroke: var(--orange); }
+.s-u { stroke: var(--blue); }
+
+/* ---------- SECTIONS ---------- */
+section { position: relative; }
+.sec { padding-block: clamp(80px, 12vw, 160px); }
+.sec-head { display: grid; gap: 22px; margin-bottom: clamp(40px, 6vw, 72px); }
+.sec-head .label { color: var(--burgundy); }
+
+/* Manifesto */
+.manifesto .grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: end; }
+.manifesto .h-xl span { color: var(--burgundy); }
+.manifesto .side { display: grid; gap: 20px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 14px; text-decoration: none;
+  font: 400 11px/1 var(--tech); letter-spacing: .14em; text-transform: uppercase;
+  padding: 18px 22px; background: var(--ink); color: #fff; width: fit-content;
+  transition: background .2s;
+}
+.btn:hover { background: var(--orange); }
+.btn::after { content: "→"; font-family: var(--body); font-size: 16px; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: #fff; }
+
+/* Numbers */
+.numbers { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.numbers .row { display: grid; grid-template-columns: repeat(4, 1fr); }
+.numbers .cell { padding: 36px 24px 32px 0; display: grid; gap: 10px; border-right: 1px solid var(--line); }
+.numbers .cell + .cell { padding-left: 24px; }
+.numbers .cell:last-child { border-right: 0; }
+.numbers .n { font: 900 clamp(56px, 7vw, 104px)/.85 var(--display); font-variant-numeric: tabular-nums; }
+.numbers .cell:nth-child(1) .n { color: var(--orange); }
+.numbers .cell:nth-child(2) .n { color: var(--burgundy); }
+.numbers .cell:nth-child(3) .n { color: var(--blue); }
+.numbers .label { color: var(--ink-2); }
+
+/* Split blocks (second split-screen moment) */
+.split { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+.split > div { min-width: 0; }
+.split .dark { background: var(--ink); color: #fff; }
+.split .pane { padding-block: clamp(72px, 10vw, 140px); padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: clamp(24px, 5vw, 80px); display: grid; align-content: space-between; gap: 48px; }
+.split .pane.right { padding-left: clamp(24px, 5vw, 80px); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+.split .sticky { position: sticky; top: 0; height: 100vh; display: grid; align-content: space-between; }
+
+/* Dino Chiesa timeline */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; }
+.timeline li { display: grid; grid-template-columns: 110px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid rgba(255,255,255,.18); }
+.timeline .yr { font: 800 34px/1 var(--display); color: var(--orange); font-variant-numeric: tabular-nums; }
+.timeline h3 { font: 600 19px/1.3 var(--body); margin: 0 0 4px; }
+.timeline p { margin: 0; color: rgba(255,255,255,.66); font-size: 16px; }
+.alumni { display: flex; flex-wrap: wrap; gap: 8px; }
+.alumni span { font: 400 10px/1 var(--tech); letter-spacing: .12em; text-transform: uppercase; border: 1px solid rgba(255,255,255,.3); padding: 9px 12px; }
+.big-quote { font: 900 clamp(48px, 7.5vw, 120px)/.85 var(--display); text-transform: uppercase; margin: 0; }
+.big-quote b { color: var(--orange); font-weight: inherit; }
+
+/* Products */
+.products .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
+.prod {
+  position: relative; background: var(--paper); min-height: 520px; padding: clamp(24px, 3vw, 44px);
+  display: grid; grid-template-rows: auto 1fr auto; gap: 24px; text-decoration: none; overflow: hidden;
+  transition: background .35s, color .35s;
+}
+.prod .brand { font: 900 clamp(110px, 16vw, 230px)/.8 var(--display); text-transform: uppercase; align-self: end; letter-spacing: -.02em; }
+.prod .foot { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+.prod .foot p { margin: 0; max-width: 34ch; color: var(--ink-2); transition: color .35s; }
+.prod .arrow { font: 400 11px/1 var(--tech); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.prod:hover { background: var(--burgundy); color: #fff; }
+.prod.fa:hover { background: var(--blue); }
+.prod:hover .foot p { color: rgba(255,255,255,.8); }
+.prod .chip { position: absolute; top: clamp(24px, 3vw, 44px); right: clamp(24px, 3vw, 44px); width: 14px; height: 14px; transform: rotate(45deg); border: 3px solid currentColor; }
+
+/* Korus group */
+.korus .grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.korus .co { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 26px 22px 30px; display: grid; gap: 12px; align-content: start; min-height: 200px; }
+.korus .co h3 { font: 800 30px/.95 var(--display); text-transform: uppercase; margin: 0; }
+.korus .co p { margin: 0; font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+.korus .co.kr { background: var(--ink); color: #fff; }
+.korus .co.kr p { color: rgba(255,255,255,.7); }
+.korus .values { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 36px; }
+.korus .values span { font: 800 28px/1 var(--display); text-transform: uppercase; }
+.korus .values span:nth-child(1) { color: var(--burgundy); }
+.korus .values span:nth-child(2) { color: var(--orange); }
+.korus .values span:nth-child(3) { color: var(--blue); }
+
+/* Dealers */
+.dealers { background: var(--paper-2); }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.filters button {
+  font: 400 11px/1 var(--tech); letter-spacing: .12em; text-transform: uppercase;
+  padding: 12px 16px; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer;
+}
+.filters button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.filters button .c { opacity: .55; margin-left: 6px; }
+.dlist { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 32px; list-style: none; margin: 0; padding: 0; }
+.dlist li { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 16px 0; border-top: 1px solid var(--line); min-width: 0; }
+.dlist .nm { font-weight: 600; font-size: 16px; line-height: 1.3; }
+.dlist .ct { font: 400 10px/1.4 var(--tech); letter-spacing: .1em; text-transform: uppercase; color: var(--blue); text-align: right; }
+.dlist .cy { grid-column: 1 / -1; color: var(--ink-2); font-size: 14px; }
+
+/* Contacts */
+.contact .split { min-height: auto; }
+.contact .pane { gap: 40px; }
+.addr { display: grid; gap: 28px; }
+.addr div { display: grid; gap: 6px; }
+.addr .label { color: rgba(255,255,255,.55); }
+.addr p { margin: 0; font-size: 18px; }
+.addr a { text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.35); }
+.addr a:hover { border-color: var(--orange); color: var(--orange); }
+.mailbig { font: 900 clamp(38px, 5.6vw, 84px)/.9 var(--display); text-transform: uppercase; margin: 0; word-break: break-word; }
+.socials { display: flex; gap: 10px; flex-wrap: wrap; }
+
+footer { background: var(--ink); color: rgba(255,255,255,.6); }
+footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; border-top: 1px solid rgba(255,255,255,.12); }
+footer .label { font-size: 10px; }
+footer .brand { padding-block: 64px 40px; border-top: 0; align-items: end; }
+footer .brand img { width: min(340px, 70vw); }
+footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 960px) {
+  .manifesto .grid, .split { grid-template-columns: 1fr; }
+  .split .sticky { position: static; height: auto; gap: 40px; }
+  .split .pane, .split .pane.right { padding-left: var(--gutter); padding-right: var(--gutter-r); }
+  .split { min-height: auto; }
+  .numbers .row { grid-template-columns: repeat(2, 1fr); }
+  .numbers .cell:nth-child(2) { border-right: 0; }
+  .numbers .cell:nth-child(3) { padding-left: 0; }
+  .numbers .cell:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .korus .grid { grid-template-columns: repeat(2, 1fr); }
+  .dlist { grid-template-columns: repeat(2, 1fr); }
+  .products .grid { grid-template-columns: 1fr; }
+  .prod { min-height: 380px; }
+}
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .type .l1 { top: 24vh; }
+  .type .l2 { bottom: 26vh; }
+  .type .meta { flex-direction: column; gap: 14px; }
+  .type .meta span:last-child { text-align: left; }
+  .korus .grid, .dlist { grid-template-columns: 1fr; }
+  .timeline li { grid-template-columns: 76px 1fr; }
+  .numbers .cell { padding-right: 12px; }
+  .numbers .cell + .cell { padding-left: 12px; }
+  .numbers .cell:nth-child(3) { padding-left: 0; }
+}
+
+/* Reduced motion: no scroll-driven intro; show the opened state */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .intro { height: auto; }
+  .stage { position: relative; height: auto; }
+  .half, .stripes-live, .scroll-cue { display: none; }
+  .under { position: relative; min-height: 90vh; padding-block: 120px 80px; }
+  .under-inner { transform: none; opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <a href="#top" aria-label="Kart Republic home"><img class="mark" src="assets/kr-mark-white.svg" alt="Kart Republic"></a>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#racing">Racing Team</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#dealers">Dealers</a></li>
+    <li><a href="#contacts">Contacts</a></li>
+  </ul>
+  <a class="store" href="https://store.kartrepublic.com" target="_blank" rel="noopener">Store</a>
+</nav>
+
+<!-- INTRO -->
+<section class="intro" id="top" aria-label="Kart Republic">
+  <div class="stage" id="stage">
+    <div class="under">
+      <div class="under-inner">
+        <img src="assets/kr-logo.svg" alt="KR Global Motorsport Company">
+        <p class="tag">We are republic,<br><em>we are one</em></p>
+      </div>
+    </div>
+
+    <div class="half l" aria-hidden="true">
+      <div class="type">
+        <div class="line l1">Kart</div>
+        <div class="line l2">Re<span class="o">pub</span>lic</div>
+        <div class="meta"><span>KR Global Motorsport Company<br>Due Carrare · Padova · IT</span><span>Chassis · Racing Team<br>44 dealers worldwide</span></div>
+      </div>
+    </div>
+    <div class="half r" aria-hidden="true">
+      <div class="type">
+        <div class="line l1">Kart</div>
+        <div class="line l2">Re<span class="o">pub</span>lic</div>
+        <div class="meta"><span>KR Global Motorsport Company<br>Due Carrare · Padova · IT</span><span>Chassis · Racing Team<br>44 dealers worldwide</span></div>
+      </div>
+    </div>
+
+    <svg class="stripes stripes-live" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
+      <path class="s-b" d="M0 10 H760 L790 4 H1000" style="stroke-width:7"/>
+      <path class="s-o" d="M0 32 H420 L450 54 H620 L650 32 H1000" style="stroke-width:7"/>
+      <path class="s-u" d="M0 54 H420 L450 32 H620 L650 54 H1000" style="stroke-width:7"/>
+    </svg>
+    <div class="scroll-cue">Scroll</div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="sec manifesto" id="about">
+  <div class="wrap">
+    <div class="grid">
+      <div class="sec-head" style="margin:0">
+        <span class="label">About Kart Republic</span>
+        <h2 class="h-xl">Passion into <span>performance</span></h2>
+      </div>
+      <div class="side">
+        <p class="lede">Kart Republic builds racing kart chassis in Due Carrare, near Padova, and runs its own factory racing team. Since October 2025 KR is part of Korus, an Italian motorsport group built to cover the whole path from karting to single-seaters.</p>
+        <a class="btn" href="https://store.kartrepublic.com" target="_blank" rel="noopener">Open the store</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="numbers" aria-label="Key figures">
+  <div class="wrap">
+    <div class="row">
+      <div class="cell"><span class="n">18</span><span class="label">World titles, Dino Chiesa</span></div>
+      <div class="cell"><span class="n">44</span><span class="label">Dealers in 30+ countries</span></div>
+      <div class="cell"><span class="n">1984</span><span class="label">First season in karting</span></div>
+      <div class="cell"><span class="n">8</span><span class="label">Companies in Korus group</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- RACING / DINO CHIESA : second split-screen -->
+<section class="split" id="racing">
+  <div class="pane">
+    <div class="sticky">
+      <div class="sec-head" style="margin:0">
+        <span class="label">Racing Team · Dino Chiesa</span>
+        <h2 class="h-l">The team manager behind world champions</h2>
+      </div>
+      <div style="display:grid;gap:24px">
+        <p class="lede">The son of a karting pioneer, Dino Chiesa started as a mechanic and grew into one of the sport's most decorated team managers. He brought Lewis Hamilton and Nico Rosberg through karting, and today he leads the KR racing team.</p>
+        <p class="lede" style="font-size:16px">TKART magazine placed him 9th among the most influential people in karting in 2015.</p>
+        <a class="btn ghost" href="#contacts">Contact the racing team</a>
+      </div>
+    </div>
+  </div>
+  <div class="pane right dark">
+    <ol class="timeline">
+      <li><span class="yr">1984</span><div><h3>Kalì Kart</h3><p>First major experience in karting, and the start of a long career with CRG.</p></div></li>
+      <li><span class="yr">DAM</span><div><h3>Head of DAM Race</h3><p>Leads CRG's young racing department to international wins.</p></div></li>
+      <li><span class="yr">MBM</span><div><h3>Mercedes-Benz McLaren</h3><p>Team Manager, mentoring Lewis Hamilton and Nico Rosberg.</p></div></li>
+      <li><span class="yr">2004</span><div><h3>Zanardì</h3><p>Takes over the brand and wins titles in all three world championships.</p></div></li>
+      <li><span class="yr">2016</span><div><h3>Back at CRG</h3><p>Wins across the world championships in all four categories entered.</p></div></li>
+      <li><span class="yr">2017</span><div><h3>Chiesa Corse</h3><p>Guides young drivers from karting to single-seaters, Nyck De Vries among them.</p></div></li>
+    </ol>
+    <div style="display:grid;gap:18px">
+      <span class="label" style="color:rgba(255,255,255,.55)">Drivers he worked with</span>
+      <div class="alumni">
+        <span>Lewis Hamilton</span><span>Nico Rosberg</span><span>Lance Stroll</span><span>Nyck De Vries</span><span>Alex Zanardi</span><span>Vitantonio Liuzzi</span><span>Ryan Briscoe</span><span>Patrick Long</span><span>Lucas Auer</span>
+      </div>
+    </div>
+    <p class="big-quote"><b>18</b> world<br>titles</p>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="sec products" id="products">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Products</span>
+      <h2 class="h-l">Two chassis lines</h2>
+    </div>
+    <div class="grid">
+      <a class="prod kr" href="https://store.kartrepublic.com/it/kr-kart-republic.html" target="_blank" rel="noopener">
+        <span class="label">Kart Republic</span>
+        <span class="brand">KR</span>
+        <span class="foot"><p>The Kart Republic chassis range, with spare parts and accessories in the store.</p><span class="arrow">Store →</span></span>
+        <span class="chip" aria-hidden="true"></span>
+      </a>
+      <a class="prod fa" href="https://store.kartrepublic.com/it/fa-fernando-alonso.html" target="_blank" rel="noopener">
+        <span class="label">Fernando Alonso Kart</span>
+        <span class="brand">FA</span>
+        <span class="foot"><p>The FA Kart line built with Fernando Alonso, available through the same store and dealers.</p><span class="arrow">Store →</span></span>
+        <span class="chip" aria-hidden="true"></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<svg class="stripes" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
+  <path class="s-b" d="M0 10 H760 L790 4 H1000"/>
+  <path class="s-o" d="M0 32 H420 L450 54 H620 L650 32 H1000"/>
+  <path class="s-u" d="M0 54 H420 L450 32 H620 L650 54 H1000"/>
+</svg>
+
+<!-- KORUS -->
+<section class="sec korus" id="korus">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Part of Korus · since 27.10.2025</span>
+      <h2 class="h-l">One group, from karts to Formula Regional</h2>
+      <p class="lede">Korus brings eight Italian motorsport companies into one hub covering engineering, production, logistics and promotion. TEC Racing holds the majority stake.</p>
+    </div>
+    <div class="grid">
+      <div class="co kr"><span class="label">Karting</span><h3>Kart Republic</h3><p>Karting brand with a leading racing team.</p></div>
+      <div class="co"><span class="label">Single-seaters</span><h3>Tatuus</h3><p>Formula 4 and Formula Regional cars.</p></div>
+      <div class="co"><span class="label">Engines</span><h3>ATM</h3><p>High-performance racing engines.</p></div>
+      <div class="co"><span class="label">Karting engines</span><h3>IAME</h3><p>60 world titles.</p></div>
+      <div class="co"><span class="label">Components</span><h3>Breda Racing</h3><p>Production hub for components and instrumentation.</p></div>
+      <div class="co"><span class="label">Electronics</span><h3>NEXT Solution</h3><p>Electronics, Le Mans headlights, Tatuus steering wheels.</p></div>
+      <div class="co"><span class="label">Composites</span><h3>YCOM</h3><p>Lightweight composite engineering.</p></div>
+      <div class="co"><span class="label">Karts · since 1959</span><h3>Birelart</h3><p>Racing and rental karts from Lissone.</p></div>
+    </div>
+    <div class="values"><span>Passion</span><span>Team spirit</span><span>Excellence</span></div>
+  </div>
+</section>
+
+<!-- DEALERS -->
+<section class="sec dealers" id="dealers">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Dealers</span>
+      <h2 class="h-l">Find KR near your track</h2>
+    </div>
+    <div class="filters" role="group" aria-label="Filter dealers by region" id="filters"></div>
+    <ul class="dlist" id="dlist"></ul>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section class="contact" id="contacts">
+  <div class="split">
+    <div class="pane">
+      <div class="sec-head" style="margin:0">
+        <span class="label">Contacts</span>
+        <h2 class="h-l">Talk to Kart Republic</h2>
+      </div>
+      <p class="mailbig">info@<br>kartrepublic.com</p>
+      <div class="socials">
+        <a class="btn ghost" href="https://it-it.facebook.com/KartRepublic/" target="_blank" rel="noopener">Facebook</a>
+        <a class="btn ghost" href="https://www.instagram.com/kartrepublic/" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn ghost" href="https://youtu.be/wM3Lj0lOi88" target="_blank" rel="noopener">YouTube</a>
+      </div>
+    </div>
+    <div class="pane right dark">
+      <div class="addr">
+        <div><span class="label">Operations</span><p>Via dell'Artigianato, 8G<br>35020 Due Carrare (PD), Italia</p></div>
+        <div><span class="label">Registered office</span><p>Viale Montesi, 5<br>35020 Cartura (PD), Italia</p></div>
+        <div><span class="label">Phone</span><p><a href="tel:+390499126079">+39 049 9126079</a></p></div>
+        <div><span class="label">Email</span><p><a href="mailto:info@kartrepublic.com">info@kartrepublic.com</a><br><a href="mailto:racing@kartrepublic.com">racing@kartrepublic.com</a> · racing team</p></div>
+      </div>
+      <a class="btn" style="background:var(--orange)" href="https://store.kartrepublic.com/it/customer/account/login" target="_blank" rel="noopener">Reserved area</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap brand">
+    <img src="assets/kr-logo-light.svg" alt="KR Global Motorsport Company">
+    <p>Kart Republic · Via dell'Artigianato, 8G, 35020 Due Carrare (PD), Italia</p>
+  </div>
+  <div class="wrap">
+    <span class="label">KR S.r.l · C.F. e P.I. 05068060283</span>
+    <span class="label">KR Motor Sport S.r.l · C.F. e P.I. 05070530281</span>
+    <span class="label">We are republic, we are one</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---- dealers ---- */
+  var D = [
+    ["Europe","Italy","DRAKE di Bertipaglia Enrico","San Pietro Viminario"],
+    ["Europe","Italy","MONDOKART RACING S.p.A.","Pogliano Milanese"],
+    ["Europe","Austria","TARILLION MOTORSPORT KG","Wien"],
+    ["Europe","Belgium","NEK SRL","Mariembourg"],
+    ["Europe","Belgium","SCHEPERS RACING SERVICE BVBA","Zolder"],
+    ["Europe","Belgium","VDK RACING SPRL","Wavre"],
+    ["Europe","Denmark","HK MOTORSPORT","Greve"],
+    ["Europe","Finland","SPEEDFUN Ltd","Kuopio"],
+    ["Europe","France","OCO CORP · VICTORY LANE","Servon"],
+    ["Europe","France","IAME FRANCE","Dammartin-en-Goële"],
+    ["Europe","Germany","DORR MOTORSPORT GMBH","Frankfurt"],
+    ["Europe","Germany","TB MOTORSPORT","Vöhringen"],
+    ["Europe","Germany","PRESPO GMBH & CO. KG","Wittibreut"],
+    ["Europe","Greece","BOURIOTIS VASILEIOS","Athens"],
+    ["Europe","Norway","SK SERVICE AS","Spydeberg"],
+    ["Europe","Netherlands","SP MOTORSPORT","Echt"],
+    ["Europe","Poland","KRZ MOTORSPORT","Warsaw"],
+    ["Europe","Portugal","F.C.K. L.DA","Évora"],
+    ["Europe","United Kingdom","ARGENTI MOTORSPORT","Woodford Halse"],
+    ["Europe","Czech Republic","KVS RACING S.R.O.","Cvikov"],
+    ["Europe","Czech Republic","ZAJIC RACING S.R.O.","Přerov"],
+    ["Europe","Romania","GULSTAR RACING","Malu Mare"],
+    ["Europe","Slovenia","TGR, Tomaz Gorenc s.p.","Vrhnika"],
+    ["Europe","Spain","DPK TEAM SL","Bobes, Asturias"],
+    ["Europe","Sweden","KART REPUBLIC SWEDEN AB","Helsingborg"],
+    ["Europe","Hungary","FREESTYLE RACING SE","Kecskemét"],
+    ["Europe","Switzerland","KART-SHOP CARIGIET AG","Rümlang"],
+    ["Europe","Switzerland","PLAYKART SARL","Ins"],
+    ["Europe","Russia","BUZNIKOV PHILIPP ALEKSEEVICH","Moscow"],
+    ["Asia & Middle East","UAE","MOTORS SCAPE RACE CARS TRADING LLC","Dubai"],
+    ["Asia & Middle East","Bahrain","FORZA BAHRAIN RACING","Bahrain"],
+    ["Asia & Middle East","UAE","RAK TRACK","Ras Al-Khaimah"],
+    ["Asia & Middle East","Japan","ARK INC.","Fukuoka"],
+    ["Asia & Middle East","China","JOINTEK SPORTS","Shenzhen"],
+    ["Asia & Middle East","South-East Asia","LOR Racing Pte Ltd","Singapore"],
+    ["Americas","USA","KARTSPORT NORTH AMERICA","Mooresville, NC"],
+    ["Americas","Canada","HM PROPELA RACING INC.","Saint-Bruno-de-Montarville, QC"],
+    ["Americas","Costa Rica","MH KARTING","San José"],
+    ["Americas","Panamá","KRP SA · Kart Republic Panamá","Ancón"],
+    ["Americas","Dominican Rep.","CARIBECA","Santo Domingo"],
+    ["Americas","Brazil","KMS IMPORTACAO E COMERCIO LTDA","São Paulo"],
+    ["Americas","South America","KDA SRL","Buenos Aires, Argentina"],
+    ["Africa & Oceania","Australia","DPE KART SUPERSTORE","Keysborough, VIC"],
+    ["Africa & Oceania","South Africa","SQUADRA CORSE","Pretoria"]
+  ];
+  var regions = ["All","Europe","Americas","Asia & Middle East","Africa & Oceania"];
+  var fEl = document.getElementById("filters"), lEl = document.getElementById("dlist");
+  function esc(s){ return s.replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function render(r) {
+    lEl.innerHTML = D.filter(function(d){ return r === "All" || d[0] === r; }).map(function(d){
+      return '<li><span class="nm">' + esc(d[2]) + '</span><span class="ct">' + esc(d[1]) + '</span><span class="cy">' + esc(d[3]) + '</span></li>';
+    }).join("");
+    Array.prototype.forEach.call(fEl.children, function(b){ b.setAttribute("aria-pressed", b.dataset.r === r ? "true" : "false"); });
+  }
+  regions.forEach(function(r){
+    var n = r === "All" ? D.length : D.filter(function(d){ return d[0] === r; }).length;
+    var b = document.createElement("button");
+    b.type = "button"; b.id = "f-" + r.replace(/\W+/g, "-").toLowerCase(); b.dataset.r = r;
+    b.innerHTML = esc(r) + '<span class="c">' + n + '</span>';
+    b.addEventListener("click", function(){ render(r); });
+    fEl.appendChild(b);
+  });
+  render("All");
+
+  /* ---- split-screen intro ---- */
+  var intro = document.querySelector(".intro"), stage = document.getElementById("stage");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var ink = [28,28,26], bur = [112,35,59];
+  function clamp(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function ease(t){ return t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2; }
+  var ticking = false;
+  function update() {
+    ticking = false;
+    if (reduce.matches) return;
+    var total = intro.offsetHeight - window.innerHeight;
+    var p = clamp(-intro.getBoundingClientRect().top / (total || 1));
+    var a = ease(clamp(p / .62));
+    var b = ease(clamp((p - .62) / .3));
+    var split = 50 - a * 12;                       /* seam drifts from 50vw to 38vw */
+    var c = ink.map(function(v, i){ return Math.round(v + (bur[i] - v) * a); });
+    var s = stage.style;
+    s.setProperty("--a", a.toFixed(4));
+    s.setProperty("--b", b.toFixed(4));
+    s.setProperty("--split", split.toFixed(3) + "vw");
+    s.setProperty("--rbg", "rgb(" + c.join(",") + ")");
+  }
+  var nav = document.querySelector(".nav");
+  function onScroll(){
+    nav.classList.toggle("solid", intro.getBoundingClientRect().bottom <= nav.offsetHeight);
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>
