@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: d3racinglab-site
+    runtime: static
+    buildCommand: echo "static site, no build step"
+    staticPublishPath: .
+    domains:
+      - d3racinglab.com
+      - www.d3racinglab.com
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800
