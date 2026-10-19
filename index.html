@@ -233,6 +233,10 @@ section[id] { scroll-margin-top: 64px; }
 .split .pane { padding-block: clamp(72px, 10vw, 140px); padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: clamp(24px, 5vw, 80px); display: grid; align-content: space-between; gap: 48px; }
 .split .pane.right { padding-left: clamp(24px, 5vw, 80px); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
 .split .sticky { position: sticky; top: 0; height: 100vh; display: grid; align-content: space-between; }
+/* cut-out portrait fills the gap between heading and text; its lower edge fades into the page */
+#racing .sticky { grid-template-rows: auto minmax(0, 1fr) auto; gap: 24px; }
+.split .portrait { display: block; min-height: 0; }
+.split .portrait img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: left bottom; }
 
 /* Dino Chiesa timeline */
 .timeline { list-style: none; margin: 0; padding: 0; display: grid; }
@@ -326,6 +330,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
 @media (max-width: 960px) {
   .manifesto .grid, .split { grid-template-columns: 1fr; }
   .split .sticky { position: static; height: auto; gap: 40px; }
+  .split .portrait img { height: auto; }
   .split .pane, .split .pane.right { padding-left: var(--gutter); padding-right: var(--gutter-r); }
   .split { min-height: auto; }
   .numbers .row { grid-template-columns: repeat(2, 1fr); }
@@ -471,6 +476,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
         <span class="label">Racing Team · Dino Chiesa</span>
         <h2 class="h-l">The team manager behind world champions</h2>
       </div>
+      <picture class="portrait"><source srcset="assets/dino.webp" type="image/webp"><img src="assets/dino.png" alt="Dino Chiesa with a WSK trophy" width="900" height="686" loading="lazy"></picture>
       <div style="display:grid;gap:24px">
         <p class="lede">The son of a karting pioneer, Dino Chiesa started as a mechanic and grew into one of the sport's most decorated team managers. He brought Lewis Hamilton and Nico Rosberg through karting, and today he leads the KR racing team.</p>
         <a class="btn ghost" href="#contacts">Contact the racing team</a>
