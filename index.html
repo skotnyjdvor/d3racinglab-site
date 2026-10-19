@@ -162,6 +162,14 @@ h2, h3 { text-wrap: balance; }
 }
 .stripes-live path { stroke-dasharray: 1100; stroke-dashoffset: calc(1100 - var(--a, 0) * 1100); }
 
+.kart {
+  position: absolute; z-index: 2; pointer-events: none;
+  right: 3vw; top: 50%; width: min(44vw, 82vh);
+  transform: translate(calc(var(--a, 0) * 75vw), calc(-46% - var(--a, 0) * 8vh)) rotate(calc(var(--a, 0) * 28deg));
+  filter: drop-shadow(0 30px 40px rgba(0,0,0,.45));
+  will-change: transform;
+}
+.kart img { width: 100%; height: auto; }
 .scroll-cue {
   position: absolute; left: 50%; translate: -50% 0; bottom: calc(4.5vh + clamp(40px, 7vh, 80px) + 18px);
   font: 400 10px/1 var(--tech); letter-spacing: .2em; text-transform: uppercase;
@@ -309,6 +317,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   .prod { min-height: 380px; }
 }
 @media (max-width: 560px) {
+  .kart { width: 70vw; right: -10vw; top: 66%; }
   .intro { height: 320vh; }
   body { font-size: 16px; }
   .type .l1 { top: 24vh; }
@@ -327,7 +336,7 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
   html { scroll-behavior: auto; }
   .intro { height: auto; }
   .stage { position: relative; height: auto; }
-  .half, .stripes-live, .scroll-cue { display: none; }
+  .half, .stripes-live, .scroll-cue, .kart { display: none; }
   .under { position: relative; min-height: 90vh; padding-block: 120px 80px; }
   .under-inner { transform: none; opacity: 1; }
 }
@@ -398,6 +407,10 @@ footer .brand p { margin: 0; max-width: 36ch; font-size: 15px; }
       <path class="s-o" d="M0 32 H420 L450 54 H620 L650 32 H1000" style="stroke-width:7"/>
       <path class="s-u" d="M0 54 H420 L450 32 H620 L650 54 H1000" style="stroke-width:7"/>
     </svg>
+    <picture class="kart">
+      <source srcset="assets/kart.webp" type="image/webp">
+      <img src="assets/kart.png" alt="Kart Republic racing kart, top view" width="1000" height="857" fetchpriority="high">
+    </picture>
     <div class="scroll-cue">Scroll</div>
   </div>
 </section>
